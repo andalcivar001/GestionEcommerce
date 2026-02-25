@@ -1,6 +1,5 @@
 import 'package:ecommerce_prueba/src/domain/models/Client.dart';
 import 'package:ecommerce_prueba/src/domain/models/OrderDetail.dart';
-import 'package:ecommerce_prueba/src/domain/models/Product.dart';
 import 'package:ecommerce_prueba/src/domain/utils/Resource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';

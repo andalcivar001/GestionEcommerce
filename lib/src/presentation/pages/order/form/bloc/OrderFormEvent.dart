@@ -39,6 +39,14 @@ class RestarCantidadOrderFormEvent extends OrderFormEvent {
   List<Object?> get props => [orderDetail];
 }
 
+class EliminarProductOrderFormEvent extends OrderFormEvent {
+  final String idProducto;
+  const EliminarProductOrderFormEvent({required this.idProducto});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [idProducto];
+}
+
 class BuscarProductOrderFormEvent extends OrderFormEvent {
   final Product product;
   const BuscarProductOrderFormEvent({required this.product});

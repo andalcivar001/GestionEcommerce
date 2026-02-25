@@ -35,6 +35,7 @@ class OrderFormBloc extends Bloc<OrderFormEvent, OrderFormState> {
     on<BuscarProductOrderFormEvent>(_onBuscarProduct);
     on<SubmittedOrderFormEvent>(_onSubmitted);
     on<ResetOrderFormEvent>(_onReset);
+    on<EliminarProductOrderFormEvent>(_onEliminar);
   }
 
   final formKey = GlobalKey<FormState>();
@@ -111,6 +112,22 @@ class OrderFormBloc extends Bloc<OrderFormEvent, OrderFormState> {
         nuevaLista.removeAt(index);
       }
 
+      _calcularTotales(nuevaLista, emit);
+    }
+  }
+
+  Future<void> _onEliminar(
+    EliminarProductOrderFormEvent event,
+    Emitter<OrderFormState> emit,
+  ) async {
+    final List<OrderDetail> nuevaLista = List.from(state.orderDetail);
+
+    final index = nuevaLista.indexWhere(
+      (x) => x.idProducto == event.idProducto,
+    );
+
+    if (index != -1) {
+      nuevaLista.removeAt(index);
       _calcularTotales(nuevaLista, emit);
     }
   }

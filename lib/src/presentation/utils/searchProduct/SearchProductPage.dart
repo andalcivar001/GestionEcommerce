@@ -119,7 +119,17 @@ class _SearchProductPageState extends State<SearchProductPage> {
                         ? response.data as List<Product>
                         : [];
                     if (response is Loading) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: Colors.blue,
+                            backgroundColor: Colors.grey.shade300,
+                          ),
+                        ),
+                      );
                     }
 
                     if (response is Error) {
@@ -145,6 +155,9 @@ class _SearchProductPageState extends State<SearchProductPage> {
                         itemCount: products.length,
                         itemBuilder: (_, index) {
                           final product = products[index];
+                          final orderState = context
+                              .watch<OrderFormBloc>()
+                              .state;
                           final image1 = product.imagen1 ?? '';
                           final image2 = product.imagen2 ?? '';
                           final imagenFinal = image1.isNotEmpty
@@ -154,6 +167,9 @@ class _SearchProductPageState extends State<SearchProductPage> {
                               : '';
 
                           final precio = product.precio ?? 0;
+                          final selected = orderState.orderDetail.any(
+                            (x) => x.idProducto == product.id,
+                          );
 
                           return GestureDetector(
                             onTap: () {
@@ -167,19 +183,25 @@ class _SearchProductPageState extends State<SearchProductPage> {
                                 );
                                 return;
                               }
-
-                              AppToast.success(
-                                '${product.descripcion} agregado correctamente',
-                              );
-                              context.read<OrderFormBloc>().add(
-                                BuscarProductOrderFormEvent(product: product),
-                              );
+                              if (!selected) {
+                                context.read<OrderFormBloc>().add(
+                                  BuscarProductOrderFormEvent(product: product),
+                                );
+                              } else {
+                                context.read<OrderFormBloc>().add(
+                                  EliminarProductOrderFormEvent(
+                                    idProducto: product.id,
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.all(15),
                               margin: EdgeInsets.only(bottom: 6),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: selected
+                                    ? Colors.green.shade100
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
@@ -211,8 +233,8 @@ class _SearchProductPageState extends State<SearchProductPage> {
                                             placeholder:
                                                 'assets/img/no_image.jpg',
                                             fit: BoxFit.cover,
-                                            fadeInDuration: const Duration(
-                                              seconds: 1,
+                                            fadeInDuration: Duration(
+                                              milliseconds: 300,
                                             ),
 
                                             imageErrorBuilder:

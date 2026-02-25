@@ -242,7 +242,7 @@ class OrderFormContent extends StatelessWidget {
             ),
 
       // Cómo mostrar cada item
-      itemAsString: (Client x) => x.nombre,
+      itemAsString: (Client x) => '${x.nombre} - ${x.numeroIdentificacion}',
 
       compareFn: (Client item1, Client item2) => item1.id == item2.id,
 
@@ -309,12 +309,12 @@ class OrderFormContent extends StatelessWidget {
         }
       },
       child: SizedBox(
-        height: 45,
+        height: 50,
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Color(0xFF1E3C72),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(99),
             border: Border.all(color: Colors.white, width: 1.5),
           ),
           child: Row(
@@ -352,12 +352,12 @@ class OrderFormContent extends StatelessWidget {
         }
       },
       child: SizedBox(
-        height: 45,
+        height: 50,
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(99),
             border: Border.all(color: Colors.black45, width: 1.5),
           ),
           child: Row(

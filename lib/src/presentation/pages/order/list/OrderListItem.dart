@@ -93,6 +93,42 @@ class OrderListItem extends StatelessWidget {
               ],
             ),
           ),
+          _divider(),
+          Container(
+            padding: EdgeInsets.only(top: 3, bottom: 3),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+            height: 35,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    label: Text('Consultar'),
+                    icon: Icon(Icons.search),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade300,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    label: Text('Eliminar'),
+                    icon: Icon(Icons.cancel),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade300,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
