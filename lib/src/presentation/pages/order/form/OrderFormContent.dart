@@ -6,6 +6,7 @@ import 'package:ecommerce_prueba/src/presentation/pages/order/form/bloc/OrderFor
 import 'package:ecommerce_prueba/src/presentation/pages/order/form/bloc/OrderFormEvent.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/form/bloc/OrderFormState.dart';
 import 'package:ecommerce_prueba/src/presentation/utils/searchProduct/SearchProductPage.dart';
+import 'package:ecommerce_prueba/src/presentation/widgets/AppToast.dart';
 import 'package:ecommerce_prueba/src/presentation/widgets/DefaultButton.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
@@ -194,8 +195,17 @@ class OrderFormContent extends StatelessWidget {
               ],
             ),
             Container(
-              margin: EdgeInsets.all(15),
-              child: DefaultButton(text: 'GUARDAR VENTA', onPressed: () {}),
+              margin: EdgeInsets.all(10),
+              child: DefaultButton(
+                text: 'GUARDAR VENTA',
+                onPressed: () {
+                  if (state.formKey!.currentState!.validate()) {
+                    bloc?.add(SubmittedOrderFormEvent());
+                  } else {
+                    AppToast.error('Formulario inválido');
+                  }
+                },
+              ),
             ),
           ],
         ),
@@ -290,7 +300,7 @@ class OrderFormContent extends StatelessWidget {
           backgroundColor: Colors.transparent,
 
           builder: (context) {
-            return SearchProductPage(tipo: 'OV');
+            return SearchProductPage(tipoLlamado: 'OV');
           },
         );
 

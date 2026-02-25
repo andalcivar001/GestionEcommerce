@@ -29,6 +29,11 @@ class OrderFormItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          GestureDetector(
+            onTap: () {},
+            child: Icon(Icons.image, color: Colors.blue),
+          ),
+          SizedBox(width: 6),
           // descripcion + precio unitario
           Expanded(
             flex: 5,

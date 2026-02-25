@@ -155,9 +155,9 @@ class OrderListItem extends StatelessWidget {
   }
 
   Widget _textTotal() {
-    final double total = order.total ?? 0;
+    final double total = order.total;
     return Text(
-      '\$${total.toString()}',
+      '\$${total.toStringAsFixed(2)}',
       style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
     );
   }

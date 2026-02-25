@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchProductPage extends StatefulWidget {
-  final String tipo;
-  SearchProductPage({required this.tipo});
+  final String tipoLlamado;
+  SearchProductPage({required this.tipoLlamado});
 
   @override
   State<SearchProductPage> createState() => _SearchProductPageState();
@@ -160,6 +160,13 @@ class _SearchProductPageState extends State<SearchProductPage> {
                               // bloc?.add(ResetSearchProductEvent());
                               //controller.clear();
                               //Navigator.pop(context, product);
+                              if (product.stock <= 0 &&
+                                  widget.tipoLlamado == 'OV') {
+                                AppToast.warning(
+                                  '${product.descripcion} no tiene stock, no se puede agregar',
+                                );
+                                return;
+                              }
 
                               AppToast.success(
                                 '${product.descripcion} agregado correctamente',
@@ -170,6 +177,7 @@ class _SearchProductPageState extends State<SearchProductPage> {
                             },
                             child: Container(
                               padding: EdgeInsets.all(15),
+                              margin: EdgeInsets.only(bottom: 6),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(15),
@@ -226,13 +234,34 @@ class _SearchProductPageState extends State<SearchProductPage> {
                                           product.descripcion,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
+                                            color: product.stock <= 0
+                                                ? Colors.red
+                                                : Colors.black,
                                           ),
                                         ),
-                                        Text(
-                                          '\$${precio.toStringAsFixed(2)}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '\$${precio.toStringAsFixed(2)}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: product.stock <= 0
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(width: 15),
+                                            Text(
+                                              'Stock: ${product.stock} uni.',
+                                              style: TextStyle(
+                                                color: product.stock <= 0
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

@@ -52,3 +52,7 @@ class BuscarQrProductFormEvent extends OrderFormEvent {
   @override
   List<Object?> get props => [codAlterno];
 }
+
+class ResetOrderFormEvent extends OrderFormEvent {
+  const ResetOrderFormEvent();
+}

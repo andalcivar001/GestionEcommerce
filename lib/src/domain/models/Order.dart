@@ -22,8 +22,11 @@ class Order {
   List<OrderDetail> detalles;
   Client? cliente;
   User? usuario;
+  double subtotal;
+  double impuestos;
+  double total;
+  String idUsuario;
   String? estado;
-  double? total;
 
   Order({
     this.id,
@@ -35,8 +38,11 @@ class Order {
     required this.detalles,
     this.cliente,
     this.usuario,
+    required this.subtotal,
+    required this.impuestos,
+    required this.total,
+    required this.idUsuario,
     this.estado,
-    this.total,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
@@ -51,8 +57,11 @@ class Order {
         .toList(),
     cliente: json["cliente"] != null ? Client.fromJson(json["cliente"]) : null,
     usuario: json["usuario"] != null ? User.fromJson(json["usuario"]) : null,
-    estado: json["estado"] ?? '',
+    subtotal: json["subtotal"]?.toDouble(),
+    impuestos: json["impuestos"]?.toDouble(),
     total: json["total"]?.toDouble(),
+    idUsuario: json["idUsuario"],
+    estado: json["estado"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,8 +74,11 @@ class Order {
     "detalles": detalles.map((x) => x.toJson()).toList(),
     "cliente": cliente,
     "usuario": usuario,
-    "estado": estado,
+    "subtotal": subtotal,
+    "impuestos": impuestos,
     "total": total,
+    "idUsuario": idUsuario,
+    "estado": estado,
   };
 
   static List<Order> fromJsonList(List<dynamic> jsonList) {

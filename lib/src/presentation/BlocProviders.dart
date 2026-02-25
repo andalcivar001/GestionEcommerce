@@ -111,7 +111,8 @@ List<BlocProvider> blocProviders = [
       locator<OrderUseCases>(),
       locator<ClientUseCases>(),
       locator<ProductUseCases>(),
-    )..add(InitOrderFormEvent()),
+      locator<AuthUseCases>(),
+    ),
   ),
 
   BlocProvider<SearchProductBloc>(
