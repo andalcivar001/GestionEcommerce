@@ -15,168 +15,132 @@ class OrderListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String estado;
+    Color estadoColor;
     switch (order.estado) {
       case 'N':
         estado = 'Registrado';
+        estadoColor = Colors.orange;
         break;
       case 'X':
         estado = 'Anulado';
+        estadoColor = Colors.red;
         break;
       case 'P':
         estado = 'Pagado';
+        estadoColor = Colors.green;
         break;
       default:
         estado = 'Otro';
+        estadoColor = Colors.grey;
     }
-    String cliente = order.cliente?.nombre ?? '';
-    int productos = order.detalles.length;
+
+    final cliente = order.cliente?.nombre ?? '';
+    final productos = order.detalles.length;
 
     return Card(
-      margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            dense: true,
-            leading: Row(
-              mainAxisSize: MainAxisSize.min,
+      elevation: 3,
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(14),
+      ),
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Venta #', style: TextStyle(fontSize: 15)),
-                Text(
-                  order.secuencia.toString(),
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Icon(Icons.receipt_long, size: 20, color: Colors.grey),
+                    SizedBox(width: 6),
+                    Text(
+                      'Venta #${order.secuencia}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                _chipEstado(estado),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(Icons.person, size: 18, color: Colors.grey),
+                SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    cliente.toUpperCase(),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
                 ),
               ],
             ),
-            trailing: _chipId(estado),
-          ),
-          _divider(),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            child: Row(
+            SizedBox(height: 6),
+            Row(
               children: [
-                Text('Cliente:', style: TextStyle(fontSize: 13)),
-                SizedBox(width: 2),
-
-                Text(
-                  cliente.toUpperCase(),
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                Icon(Icons.email_outlined, size: 18, color: Colors.grey),
+                SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    order.cliente?.email ?? 'N/A',
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
+                  ),
                 ),
               ],
             ),
-          ),
-
-          Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total: ', style: TextStyle(fontSize: 13)),
-                _textTotal(),
-                Spacer(flex: 1),
-                Text('Fecha: ', style: TextStyle(fontSize: 13)),
-
-                Text(
+                _infoItem(
+                  Icons.attach_money,
+                  'Total',
+                  '\$${order.total.toStringAsFixed(2)}',
+                ),
+                _infoItem(
+                  Icons.calendar_today,
+                  'Fecha',
                   DateFormat('yyyy-MM-dd').format(order.fecha),
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
+                _infoItem(Icons.shopping_bag, 'Productos', '$productos'),
               ],
             ),
-          ),
-          _divider(),
-          Container(
-            padding: EdgeInsets.only(top: 3, bottom: 3),
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(order.cliente?.email ?? 'N/A'),
-                Text('${productos.toString()} productos'),
-              ],
-            ),
-          ),
-          _divider(),
-          Container(
-            padding: EdgeInsets.only(top: 3, bottom: 3),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-            height: 35,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
+                _actionButton(
+                  icon: Icons.print,
+                  color: Colors.black87,
                   onPressed: () {
                     bloc?.add(GenerarPdfOrderListEvent(orden: order));
                   },
-
-                  child: Icon(Icons.print, color: Colors.black, size: 30),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
+
+                const SizedBox(width: 8),
+
+                _actionButton(
+                  icon: Icons.share,
+                  color: Colors.blue,
                   onPressed: () {
                     bloc?.add(CompartirPdfOrderListEvent(orden: order));
                   },
-
-                  child: Icon(
-                    Icons.share,
-                    color: Colors.blue.shade800,
-                    size: 30,
-                  ),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {},
 
-                  child: Icon(Icons.close, color: Colors.red, size: 30),
+                const SizedBox(width: 8),
+
+                _actionButton(
+                  icon: Icons.close,
+                  color: Colors.red,
+                  onPressed: () {},
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _chipId(String estado) {
-    Color color = Colors.blue;
-    IconData icon = Icons.add;
-    switch (order.estado) {
-      case 'N':
-        color = Colors.yellow.shade700;
-        icon = Icons.new_label;
-        break;
-      case 'X':
-        color = Colors.red;
-        icon = Icons.close;
-        break;
-      case 'P':
-        color = Colors.green;
-        icon = Icons.check_circle;
-
-        break;
-    }
-    return SizedBox(
-      width: 130,
-      height: 28,
-
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(99),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.white),
-            Text(
-              estado.toUpperCase(),
-              style: TextStyle(
-                color: order.estado == 'N' ? Colors.black : Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ],
         ),
@@ -184,21 +148,84 @@ class OrderListItem extends StatelessWidget {
     );
   }
 
-  Widget _divider() {
-    return Divider(
-      height: 1, // espacio total que ocupa
-      thickness: 1, // ancho de la linea
-      color: Colors.grey,
-      indent: 10, // margen izquierdo
-      endIndent: 10, // margen derecho
+  Widget _chipEstado(String estado) {
+    Color color;
+    IconData icon;
+
+    switch (order.estado) {
+      case 'N':
+        color = Colors.orange;
+        icon = Icons.schedule;
+        break;
+      case 'X':
+        color = Colors.red;
+        icon = Icons.cancel;
+        break;
+      case 'P':
+        color = Colors.green;
+        icon = Icons.check_circle;
+        break;
+      default:
+        color = Colors.grey;
+        icon = Icons.info;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: color),
+          SizedBox(width: 4),
+          Text(
+            estado,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _textTotal() {
-    final double total = order.total;
-    return Text(
-      '\$${total.toStringAsFixed(2)}',
-      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+  Widget _infoItem(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: Colors.grey),
+        SizedBox(width: 4),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: TextStyle(color: Colors.grey, fontSize: 11)),
+            Text(
+              value,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _actionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, color: color),
+      ),
     );
   }
 }

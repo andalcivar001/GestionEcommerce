@@ -36,26 +36,46 @@ class PdfOrderService {
                   ),
                 ),
               ),
-
-              pw.SizedBox(height: 6),
+              pw.SizedBox(height: 2),
               pw.Center(
                 child: pw.Text(
-                  'Venta N° ${orden.secuencia}',
+                  'Victor Hugo Briones y Sucre',
                   style: pw.TextStyle(
-                    fontSize: 14,
+                    fontSize: 10,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 2),
+              pw.Center(
+                child: pw.Text(
+                  'Telf: 0982215699',
+                  style: pw.TextStyle(
+                    fontSize: 10,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
               ),
 
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 2),
+              pw.Center(
+                child: pw.Text(
+                  'Venta N° ${orden.secuencia}',
+                  style: pw.TextStyle(
+                    fontSize: 10,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              pw.SizedBox(height: 8),
               pw.Text(
-                'Fecha ${DateFormat('yyyy-MM-dd HH:mm').format(orden.fecha)}',
+                'Fecha: ${DateFormat('yyyy-MM-dd HH:mm').format(orden.fecha)}',
                 style: pw.TextStyle(fontSize: 10),
               ),
-              pw.SizedBox(height: 6),
+              pw.SizedBox(height: 2),
               pw.Text(
-                'Cliente ${orden.cliente!.nombre}',
+                'Cliente: ${orden.cliente!.nombre}',
                 style: pw.TextStyle(fontSize: 10),
               ),
               pw.SizedBox(height: 15),
