@@ -120,7 +120,7 @@ class OrderListItem extends StatelessWidget {
               children: [
                 _actionButton(
                   icon: Icons.remove_red_eye,
-                  color: Colors.brown,
+                  color: Colors.deepPurple,
                   onPressed: () {
                     showModalBottomSheet(
                       context: context,
@@ -129,6 +129,13 @@ class OrderListItem extends StatelessWidget {
                       builder: (_) => OrderViewPage(order: order),
                     );
                   },
+                ),
+                const SizedBox(width: 8),
+
+                _actionButton(
+                  icon: Icons.monetization_on_outlined,
+                  color: Colors.green,
+                  onPressed: () {},
                 ),
 
                 const SizedBox(width: 8),

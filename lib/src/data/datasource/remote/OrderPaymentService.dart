@@ -1,20 +1,22 @@
 import 'dart:convert';
 
 import 'package:ecommerce_prueba/src/data/api/ApiConfig.dart';
-import 'package:ecommerce_prueba/src/domain/models/Order.dart';
+import 'package:ecommerce_prueba/src/domain/models/OrderPayment.dart';
 import 'package:ecommerce_prueba/src/domain/utils/ListToString.dart';
 import 'package:ecommerce_prueba/src/domain/utils/Resource.dart';
 import 'package:http/http.dart' as http;
 
-class OrderService {
+class OrderPaymentService {
   Future<String> token;
 
-  OrderService(this.token);
+  OrderPaymentService(this.token);
 
-  Future<Resource<List<Order>>> getOrderByUser(String idUsuario) async {
+  Future<Resource<List<OrderPayment>>> getOrderPaymentByOrden(
+    String idOrden,
+  ) async {
     try {
       Uri url = Uri.parse(
-        '${Apiconfig.API_ECOMMERCE}/order/usuario/$idUsuario',
+        '${Apiconfig.API_ECOMMERCE}/payment-order/orden/$idOrden',
       );
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -24,7 +26,7 @@ class OrderService {
       final response = await http.get(url, headers: headers);
       final data = json.decode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        List<Order> orderResponse = Order.fromJsonList(data);
+        List<OrderPayment> orderResponse = OrderPayment.fromJsonList(data);
         return Success(orderResponse);
       } else {
         return Error(listToString(data['message']));
@@ -34,9 +36,9 @@ class OrderService {
     }
   }
 
-  Future<Resource<Order>> getOrderById(String id) async {
+  Future<Resource<OrderPayment>> getOrderPaymentById(String id) async {
     try {
-      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/order/$id');
+      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/payment-order/$id');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": await token,
@@ -45,7 +47,7 @@ class OrderService {
       final response = await http.get(url, headers: headers);
       final data = json.decode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        Order orderResponse = Order.fromJson(data);
+        OrderPayment orderResponse = OrderPayment.fromJson(data);
         return Success(orderResponse);
       } else {
         return Error(listToString(data['message']));
@@ -55,7 +57,7 @@ class OrderService {
     }
   }
 
-  Future<Resource<Order>> create(Order order) async {
+  Future<Resource<OrderPayment>> create(OrderPayment orderPayment) async {
     try {
       Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/order');
 
@@ -63,11 +65,11 @@ class OrderService {
         "Content-Type": "application/json",
         "Authorization": await token,
       };
-      String body = json.encode(order.toJson());
+      String body = json.encode(orderPayment.toJson());
       final response = await http.post(url, headers: headers, body: body);
       final data = json.decode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        Order orderResponse = Order.fromJson(data);
+        OrderPayment orderResponse = OrderPayment.fromJson(data);
         return Success(orderResponse);
       } else {
         return Error(listToString(data['message']));
@@ -77,9 +79,12 @@ class OrderService {
     }
   }
 
-  Future<Resource<Order>> update(Order order, String id) async {
+  Future<Resource<OrderPayment>> update(
+    OrderPayment orderPayment,
+    String id,
+  ) async {
     try {
-      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/order/$id');
+      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/payment-order/$id');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": await token,
@@ -89,11 +94,11 @@ class OrderService {
       final response = await http.put(
         url,
         headers: headers,
-        body: json.encode(order.toJson()),
+        body: json.encode(orderPayment.toJson()),
       );
       final data = json.decode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        Order orderResponse = Order.fromJson(data);
+        OrderPayment orderResponse = OrderPayment.fromJson(data);
         return Success(orderResponse);
       } else {
         return Error(listToString(data['message']));
@@ -105,15 +110,13 @@ class OrderService {
 
   Future<Resource<bool>> delete(String id) async {
     try {
-      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/order/$id');
+      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/payment-order/$id');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": await token,
       };
 
-      print('elimiando desde el servicio');
       final response = await http.delete(url, headers: headers);
-      print('respuesta del servicio ${response.body}');
       final data = json.decode(response.body);
 
       if (response.statusCode == 201 || response.statusCode == 200) {

@@ -1,4 +1,5 @@
 import 'package:ecommerce_prueba/src/data/datasource/local/SharedPref.dart';
+import 'package:ecommerce_prueba/src/data/datasource/remote/OrderPaymentService.dart';
 import 'package:ecommerce_prueba/src/data/datasource/remote/services/AuthService.dart';
 import 'package:ecommerce_prueba/src/data/datasource/remote/services/CategoryService.dart';
 import 'package:ecommerce_prueba/src/data/datasource/remote/services/CityService.dart';
@@ -11,6 +12,7 @@ import 'package:ecommerce_prueba/src/data/datasource/remote/services/UserService
 import 'package:ecommerce_prueba/src/data/repository/AuthRepositoryImpl.dart';
 import 'package:ecommerce_prueba/src/data/repository/CategoryRepositoryImpl.dart';
 import 'package:ecommerce_prueba/src/data/repository/ClientRepositoryImpl.dart';
+import 'package:ecommerce_prueba/src/data/repository/OrderPaymentRepositoryImpl.dart';
 import 'package:ecommerce_prueba/src/data/repository/OrderRepositoryImpl.dart';
 import 'package:ecommerce_prueba/src/data/repository/ProductRepositoryImpl.dart';
 import 'package:ecommerce_prueba/src/data/repository/SubCategoryRepositoryImpl.dart';
@@ -19,6 +21,7 @@ import 'package:ecommerce_prueba/src/domain/models/AuthResponse.dart';
 import 'package:ecommerce_prueba/src/domain/repository/AuthRepository.dart';
 import 'package:ecommerce_prueba/src/domain/repository/CategoryRepository.dart';
 import 'package:ecommerce_prueba/src/domain/repository/ClientRepository.dart';
+import 'package:ecommerce_prueba/src/domain/repository/OrderPaymentRepository.dart';
 import 'package:ecommerce_prueba/src/domain/repository/OrderRepository.dart';
 import 'package:ecommerce_prueba/src/domain/repository/ProductRepository.dart';
 import 'package:ecommerce_prueba/src/domain/repository/SubCategoryRepository.dart';
@@ -43,6 +46,12 @@ import 'package:ecommerce_prueba/src/domain/useCases/Order/GetOrderByIdUseCase.d
 import 'package:ecommerce_prueba/src/domain/useCases/Order/GetOrdersByUserUseCase.dart';
 import 'package:ecommerce_prueba/src/domain/useCases/Order/OrderUseCases.dart';
 import 'package:ecommerce_prueba/src/domain/useCases/Order/UpdateOrderUseCase.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/CreateOrderPaymentUseCase.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/DeleteOrderPaymentUseCase.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/GetOrderPaymentByIdUseCase.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/GetOrderPaymentsByOrdenUseCase.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/OrderPaymentUseCases.dart';
+import 'package:ecommerce_prueba/src/domain/useCases/OrderPayment/UpdateOrderPaymentUseCase.dart';
 import 'package:ecommerce_prueba/src/domain/useCases/Product/CreateProductUseCase.dart';
 import 'package:ecommerce_prueba/src/domain/useCases/Product/DeleteProductUseCase.dart';
 import 'package:ecommerce_prueba/src/domain/useCases/Product/GetProductByCodAlternoUseCase.dart';
@@ -112,6 +121,9 @@ abstract class Appmodule {
   @injectable
   OrderService get orderService => OrderService(token);
 
+  @injectable
+  OrderPaymentService get orderPaymentService => OrderPaymentService(token);
+
   /******** REPOSITORIOS *********** */ ////
   @injectable
   AuthRepository get authRepository =>
@@ -134,6 +146,9 @@ abstract class Appmodule {
       ClientRepositoryImpl(clientService, provinceService, cityService);
 
   OrderRepository get orderRepository => OrderRepositoryImpl(orderService);
+
+  OrderPaymentRepository get orderPaymentRepository =>
+      OrderPaymentRepositoryImpl(orderPaymentService);
 
   /********* USECASE *******/
   ///
@@ -196,5 +211,24 @@ abstract class Appmodule {
     create: CreateOrderUseCase(orderRepository),
     update: UpdateOrderUseCase(orderRepository),
     delete: DeleteOrderUseCase(orderRepository),
+  );
+
+  @injectable
+  OrderPaymentUseCases get orderPaymentUseCases => OrderPaymentUseCases(
+    getOrderPaymentByIdUseCase: GetOrderPaymentByIdUseCase(
+      orderPaymentRepository,
+    ),
+    getOrderPaymentsByOrdenUseCase: GetOrderPaymentsByOrdenUseCase(
+      orderPaymentRepository,
+    ),
+    createOrderPaymentUseCase: CreateOrderPaymentUseCase(
+      orderPaymentRepository,
+    ),
+    updateOrderPaymentUseCase: UpdateOrderPaymentUseCase(
+      orderPaymentRepository,
+    ),
+    deleteOrderPaymentUseCase: DeleteOrderPaymentUseCase(
+      orderPaymentRepository,
+    ),
   );
 }
