@@ -21,6 +21,7 @@ import 'package:ecommerce_prueba/src/presentation/pages/home/bloc/HomeBloc.dart'
 import 'package:ecommerce_prueba/src/presentation/pages/order/form/bloc/OrderFormBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/list/bloc/OrderListBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/list/bloc/OrderListEvent.dart';
+import 'package:ecommerce_prueba/src/presentation/pages/order/payments/list/bloc/OrderPaymentListBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/product/form/bloc/ProductFormBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/product/list/bloc/ProductListBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/product/list/bloc/ProductListEvent.dart';
@@ -121,5 +122,9 @@ List<BlocProvider> blocProviders = [
     create: (context) =>
         SearchProductBloc(locator<ProductUseCases>())
           ..add(InitSearchProductEvent()),
+  ),
+
+  BlocProvider<OrderPaymentListBloc>(
+    create: (context) => OrderPaymentListBloc(locator<OrderUseCases>()),
   ),
 ];

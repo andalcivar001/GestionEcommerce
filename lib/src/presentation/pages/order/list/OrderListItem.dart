@@ -135,7 +135,13 @@ class OrderListItem extends StatelessWidget {
                 _actionButton(
                   icon: Icons.monetization_on_outlined,
                   color: Colors.green,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      'order/payment/list',
+                      arguments: order.id,
+                    );
+                  },
                 ),
 
                 const SizedBox(width: 8),

@@ -12,7 +12,7 @@ class OrderPaymentListState extends Equatable {
 
   OrderPaymentListState copyWith({
     Order? orden,
-    final Resource? response,
+    Resource? response,
     GlobalKey<FormState>? formKey,
   }) {
     return OrderPaymentListState(

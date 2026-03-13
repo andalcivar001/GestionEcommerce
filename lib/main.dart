@@ -6,6 +6,7 @@ import 'package:ecommerce_prueba/src/presentation/pages/category/form/CategoryFo
 import 'package:ecommerce_prueba/src/presentation/pages/client/form/ClientFormPage.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/home/HomePage.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/form/OrderFormPage.dart';
+import 'package:ecommerce_prueba/src/presentation/pages/order/payments/list/OrderPaymentListPage.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/product/form/ProductFormPage.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/profile/ProfilePage.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/subcategory/form/SubCategoryFormPage.dart';
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
           'client/form': (BuildContext context) => ClientFormPage(),
           'order/form': (BuildContext context) => OrderFormPage(),
           'qrScanner': (BuildContext context) => QrScannerPage(),
+          'order/payment/list': (BuildContext context) =>
+              OrderPaymentListPage(),
         },
       ),
     );
