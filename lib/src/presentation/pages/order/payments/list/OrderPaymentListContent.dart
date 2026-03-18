@@ -2,26 +2,41 @@ import 'package:ecommerce_prueba/src/domain/models/Order.dart';
 import 'package:flutter/material.dart';
 
 class OrderPaymentListContent extends StatelessWidget {
-  Order orden;
+  final Order orden;
+
   OrderPaymentListContent({required this.orden, super.key});
 
   @override
   Widget build(BuildContext context) {
     orden.totalPagado = 60;
+
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Column(
           children: [
             _header(context),
-            Expanded(
-              child: Stack(
-                children: [
-                  _cardPrincipal(),
-                  _cardOrden(
-                    chipEstado: _chipEstado(),
-                    nombre: orden.cliente?.nombre ?? 'n/a',
+
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: _cardOrden(
+                chipEstado: _chipEstado(),
+                nombre: orden.cliente?.nombre ?? 'n/a',
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Detalle de pagos',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade800,
                   ),
-                ],
+                ),
               ),
             ),
           ],
@@ -30,299 +45,141 @@ class OrderPaymentListContent extends StatelessWidget {
     );
   }
 
+  // 🔷 HEADER
   Widget _header(BuildContext context) {
     return Container(
-      height: 50,
-      padding: EdgeInsets.only(left: 20),
-      decoration: BoxDecoration(
+      height: 55,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: const BoxDecoration(
         color: Colors.blueAccent,
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
       ),
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios, color: Colors.white, size: 25),
+            onTap: () => Navigator.pop(context),
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white),
           ),
-          SizedBox(width: 15),
-          Expanded(
-            child: Text(
-              'Detalle de Pagos',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _cardPrincipal() {
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: EdgeInsets.all(20),
-        child: Padding(padding: EdgeInsets.all(20)),
-      ),
-    );
-  }
-
-  Widget _cardOrden({required Widget chipEstado, required String nombre}) {
-    return Positioned(
-      top: 10,
-      left: 5,
-      right: 5,
-      child: Card(
-        elevation: 2,
-
-        color: Colors.white,
-        margin: EdgeInsets.symmetric(horizontal: 3, vertical: 10),
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.blueAccent,
-                        child: Icon(Icons.person, color: Colors.white),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            nombre,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.receipt_long,
-                                size: 20,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Venta #${orden.secuencia.toString()}',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  chipEstado,
-                ],
-              ),
-              SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey.shade300),
-                ),
-              ),
-              SizedBox(height: 5),
-              _barraProgresiva(),
-              SizedBox(height: 5),
-              Container(
-                decoration: BoxDecoration(color: Colors.grey.shade200),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: _cardValores(
-                        icon: Icons.attach_money,
-                        color: Colors.blue,
-                        label: 'Total Venta',
-                        value: '\$${orden.total.toStringAsFixed(2)}',
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: _cardValores(
-                        icon: Icons.check,
-                        color: Colors.green,
-                        label: 'Total Pagado',
-                        value:
-                            '\$${(orden.totalPagado ?? 0).toStringAsFixed(2)}',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(color: Colors.grey.shade200),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: _cardValores(
-                        icon: Icons.error_outline,
-                        color: Colors.orange,
-                        label: 'Pendiente',
-                        value:
-                            '\$${(orden.total - (orden.totalPagado ?? 0)).toStringAsFixed(2)}',
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: _cardValores(
-                        icon: Icons.percent,
-                        color: Colors.indigo,
-                        label: '% Pagado',
-                        value: ((orden.totalPagado ?? 0) * 100 / orden.total)
-                            .toStringAsFixed(2),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _chipEstado() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Pago parcial',
+          const SizedBox(width: 10),
+          const Text(
+            'Pagos',
             style: TextStyle(
-              color: Colors.orange,
-              fontSize: 12,
+              color: Colors.white,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(width: 3),
-          Icon(Icons.arrow_forward_ios, size: 17, color: Colors.orange),
         ],
       ),
     );
   }
 
-  Widget _barraProgresiva() {
-    double saldo = orden.total - (orden.totalPagado ?? 0);
-    double porcSaldo = (orden.totalPagado ?? 0) * 100 / orden.total;
-    Color color = Colors.blue;
-    if (porcSaldo >= 0 && porcSaldo <= 30) {
-      color = Colors.red;
-    } else if (porcSaldo >= 31 && porcSaldo <= 70) {
-      color = Colors.orange;
-    } else {
-      color = Colors.green;
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                'Pago: \$${(orden.totalPagado ?? 0).toStringAsFixed(2)}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(width: 2),
-              Text('| Saldo. \$${saldo.toStringAsFixed(2)}'),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+  // 💳 CARD PRINCIPAL
+  Widget _cardOrden({required Widget chipEstado, required String nombre}) {
+    return Card(
+      elevation: 6,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            // 👤 HEADER
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
-                    Text(
-                      '\$${(orden.totalPagado ?? 0).toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.blueAccent,
+                      child: Icon(Icons.person, color: Colors.white),
                     ),
-                    Text(' | \$${orden.total.toStringAsFixed(2)}'),
+                    const SizedBox(width: 10),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nombre,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.receipt_long,
+                              size: 16,
+                              color: Colors.grey.shade600,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'Venta #${orden.secuencia}',
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          LinearProgressIndicator(
-            value: porcSaldo / 100,
-            backgroundColor: Colors.grey.shade400,
-            color: color,
-            minHeight: 10,
-            borderRadius: BorderRadius.circular(50),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _cardValores({
-    required IconData icon,
-    required Color color,
-    required String label,
-    required String value,
-  }) {
-    return Card(
-      elevation: 1,
-      color: Colors.white,
-
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(6),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 12,
-              backgroundColor: color,
-              child: Icon(icon, color: Colors.white, size: 15),
+                chipEstado,
+              ],
             ),
-            SizedBox(width: 5),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+            const SizedBox(height: 15),
+
+            Divider(color: Colors.grey.shade300),
+
+            const SizedBox(height: 10),
+
+            _barraProgresiva(),
+
+            const SizedBox(height: 15),
+
+            // 💰 VALORES
+            Row(
               children: [
-                Text(
-                  label,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                Expanded(
+                  child: _cardValores(
+                    icon: Icons.attach_money,
+                    color: Colors.blue,
+                    label: 'Total',
+                    value: '\$${orden.total.toStringAsFixed(2)}',
+                  ),
                 ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: _cardValores(
+                    icon: Icons.check_circle,
+                    color: Colors.green,
+                    label: 'Pagado',
+                    value: '\$${(orden.totalPagado ?? 0).toStringAsFixed(2)}',
+                  ),
+                ),
+              ],
+            ),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _cardValores(
+                    icon: Icons.warning_amber_rounded,
+                    color: Colors.orange,
+                    label: 'Pendiente',
+                    value:
+                        '\$${(orden.total - (orden.totalPagado ?? 0)).toStringAsFixed(2)}',
+                  ),
+                ),
+                Expanded(
+                  child: _cardValores(
+                    icon: Icons.percent,
+                    color: Colors.indigo,
+                    label: '%',
+                    value: ((orden.totalPagado ?? 0) * 100 / orden.total)
+                        .toStringAsFixed(1),
                   ),
                 ),
               ],
@@ -333,12 +190,102 @@ class OrderPaymentListContent extends StatelessWidget {
     );
   }
 
-  Widget _infoDetalle() {
-    return ListView.builder(
-      itemCount: orden.pagos.length,
-      itemBuilder: (context, index) {
-        return Container();
-      },
+  // 🟠 CHIP ESTADO
+  Widget _chipEstado() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: const [
+          Text(
+            'Parcial',
+            style: TextStyle(
+              color: Colors.orange,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+          SizedBox(width: 4),
+          Icon(Icons.arrow_forward_ios, size: 12, color: Colors.orange),
+        ],
+      ),
     );
+  }
+
+  // 📊 PROGRESS BAR
+  Widget _barraProgresiva() {
+    double pagado = orden.totalPagado ?? 0;
+    double total = orden.total;
+    double porcentaje = pagado / total;
+
+    Color color = porcentaje <= 0.3
+        ? Colors.red
+        : porcentaje <= 0.7
+        ? Colors.orange
+        : Colors.green;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Pagado: \$${pagado.toStringAsFixed(2)} de \$${total.toStringAsFixed(2)}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: LinearProgressIndicator(
+            value: porcentaje,
+            minHeight: 10,
+            backgroundColor: Colors.grey.shade300,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 💰 MINI CARD
+  Widget _cardValores({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required String value,
+  }) {
+    return Container(
+      margin: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 12,
+            backgroundColor: color,
+            child: Icon(icon, color: Colors.white, size: 14),
+          ),
+          const SizedBox(width: 6),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+              ),
+              Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detallePagos() {
+    return Container(margin: EdgeInsets.symmetric(horizontal: 10));
   }
 }

@@ -257,6 +257,8 @@ class OrderListItem extends StatelessWidget {
     required VoidCallback onPressed,
   }) {
     return Container(
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
