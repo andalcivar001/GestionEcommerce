@@ -4,6 +4,10 @@
 
 import 'dart:convert';
 
+import 'package:ecommerce_prueba/src/domain/models/FinancialEntities.dart';
+import 'package:ecommerce_prueba/src/domain/models/Order.dart';
+import 'package:ecommerce_prueba/src/domain/models/PaymentMethod.dart';
+
 OrderPayment orderPaymentFromJson(String str) =>
     OrderPayment.fromJson(json.decode(str));
 
@@ -13,10 +17,13 @@ class OrderPayment {
   String? id;
   String idOrden;
   String idPaymentMethod;
-  int monto;
+  double monto;
   String? referencia;
   String? idEntidadFinanciera;
   bool isActive;
+  Order? order;
+  PaymentMethod? metodoPago;
+  FinancialEntities? entidadFinanciera;
 
   OrderPayment({
     this.id,
@@ -26,6 +33,9 @@ class OrderPayment {
     this.referencia,
     this.idEntidadFinanciera,
     required this.isActive,
+    this.order,
+    this.metodoPago,
+    this.entidadFinanciera,
   });
 
   factory OrderPayment.fromJson(Map<String, dynamic> json) => OrderPayment(
@@ -36,6 +46,13 @@ class OrderPayment {
     referencia: json["referencia"] ?? '',
     idEntidadFinanciera: json["idEntidadFinanciera"] ?? '',
     isActive: json["isActive"],
+    order: json["order"] != null ? Order.fromJson(json["order"]) : null,
+    metodoPago: json["metodoPago"] != null
+        ? PaymentMethod.fromJson(json["metodoPago"])
+        : null,
+    entidadFinanciera: json["entidadFinanciera"] != null
+        ? FinancialEntities.fromJson(json["entidadFinanciera"])
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -46,6 +63,9 @@ class OrderPayment {
     "referencia": referencia,
     "idEntidadFinanciera": idEntidadFinanciera,
     "isActive": isActive,
+    "order": order,
+    "metoodPago": metodoPago,
+    "entidadFinanciera": entidadFinanciera,
   };
 
   static List<OrderPayment> fromJsonList(List<dynamic> jsonList) {

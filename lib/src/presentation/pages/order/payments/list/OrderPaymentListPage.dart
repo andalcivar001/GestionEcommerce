@@ -38,9 +38,16 @@ class _OrderPaymentListPageState extends State<OrderPaymentListPage> {
         child: BlocListener<OrderPaymentListBloc, OrderPaymentListState>(
           listener: (context, state) {
             final responseOrden = state.responseOrden;
+            final responsePagos = state.responsePagos;
             if (responseOrden is Error) {
               AppToast.error(
                 'Hubo un problema al consultar la orden ${responseOrden.message}',
+              );
+            }
+
+            if (responsePagos is Error) {
+              AppToast.error(
+                'Hubo un problema al consultar los pagos ${responsePagos.message}',
               );
             }
           },
