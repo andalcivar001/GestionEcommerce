@@ -43,14 +43,22 @@ class _OrderPaymentFormPageState extends State<OrderPaymentFormPage> {
     bloc = BlocProvider.of<OrderPaymentFormBloc>(context);
     return Scaffold(
       body: BlocListener<OrderPaymentFormBloc, OrderPaymentFormState>(
+        listenWhen: (previous, current) =>
+            previous.response != current.response ||
+            previous.responseEntidadFinanciera !=
+                current.responseEntidadFinanciera ||
+            previous.responseMetodoPago != current.responseMetodoPago,
         listener: (context, state) {
           final response = state.response;
           final responseEntidadFinanciera = state.responseEntidadFinanciera;
           final responseMetodoPago = state.responseMetodoPago;
           if (response is Error) {
             AppToast.error(
-              'Hubo un error al consultar el pago ${response.message}',
+              'Hubo un error al guardar el pago ${response.message}',
             );
+          } else if (response is Success) {
+            AppToast.success('Pago guardado correctamente');
+            Navigator.pop(context, true);
           }
 
           if (responseEntidadFinanciera is Error) {
@@ -71,10 +79,10 @@ class _OrderPaymentFormPageState extends State<OrderPaymentFormPage> {
             return Stack(
               children: [
                 OrderPaymentFormcontent(bloc, state),
-                if (response is Loading)
+                if (response is Loading || state.loading)
                   Positioned.fill(
                     child: ColoredBox(
-                      color: Colors.black,
+                      color: Color(0x66000000),
                       child: Center(child: CircularProgressIndicator()),
                     ),
                   ),

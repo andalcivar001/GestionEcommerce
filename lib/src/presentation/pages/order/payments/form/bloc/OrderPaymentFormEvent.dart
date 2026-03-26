@@ -50,3 +50,7 @@ class ObservacionesOrderPaymentFormEvent extends OrderPaymentFormEvent {
   @override
   List<Object?> get props => [observaciones];
 }
+
+class SubmittedOrderPaymentFormEvent extends OrderPaymentFormEvent {
+  const SubmittedOrderPaymentFormEvent();
+}

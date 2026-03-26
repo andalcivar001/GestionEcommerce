@@ -15,8 +15,6 @@ class OrderPaymentListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    orden.totalPagado = 90.5;
-
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FA),
       body: SafeArea(
@@ -86,6 +84,17 @@ class OrderPaymentListContent extends StatelessWidget {
           // ➕ ADD BUTTON
           InkWell(
             onTap: () {
+              double saldo = orden.total - (orden.totalPagado ?? 0);
+              if (saldo <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('La orden ya está completamente pagada.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
               Navigator.pushNamed(
                 context,
                 'order/payment/form',

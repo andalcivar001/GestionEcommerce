@@ -59,7 +59,7 @@ class OrderPaymentService {
 
   Future<Resource<OrderPayment>> create(OrderPayment orderPayment) async {
     try {
-      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/order');
+      Uri url = Uri.parse('${Apiconfig.API_ECOMMERCE}/payment-order');
 
       Map<String, String> headers = {
         "Content-Type": "application/json",

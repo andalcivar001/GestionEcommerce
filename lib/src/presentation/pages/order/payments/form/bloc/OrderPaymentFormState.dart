@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class OrderPaymentFormState extends Equatable {
-  final String? id;
+  final String id;
   final String? idOrden;
   final String? idPaymentMethod;
   final double monto;
@@ -17,9 +17,10 @@ class OrderPaymentFormState extends Equatable {
   final Resource? response;
   final GlobalKey<FormState>? formKey;
   final bool loading;
+  final String? tipoMetodoPago;
 
   OrderPaymentFormState({
-    this.id,
+    this.id = '',
     this.idOrden,
     this.idPaymentMethod,
     this.monto = 0,
@@ -32,6 +33,7 @@ class OrderPaymentFormState extends Equatable {
     this.formKey,
     this.responseOrden,
     this.loading = false,
+    this.tipoMetodoPago,
   });
 
   OrderPaymentFormState copyWith({
@@ -48,6 +50,7 @@ class OrderPaymentFormState extends Equatable {
     String? observaciones,
     GlobalKey<FormState>? formKey,
     bool? loading,
+    String? tipoMetodoPago,
   }) {
     return OrderPaymentFormState(
       id: id ?? this.id,
@@ -63,6 +66,7 @@ class OrderPaymentFormState extends Equatable {
       response: response ?? this.response,
       responseOrden: responseOrden ?? this.responseOrden,
       loading: loading ?? this.loading,
+      tipoMetodoPago: tipoMetodoPago ?? this.tipoMetodoPago,
       formKey: formKey,
     );
   }
@@ -79,5 +83,7 @@ class OrderPaymentFormState extends Equatable {
     responseMetodoPago,
     responseEntidadFinanciera,
     responseOrden,
+    response,
+    tipoMetodoPago,
   ];
 }
