@@ -24,6 +24,7 @@ class OrderPaymentFormBloc
     on<MetodoPagoOrderPaymentFormEvent>(_onMetodoPagoChanged);
     on<ObservacionesOrderPaymentFormEvent>(_onObservacionesChanged);
     on<SubmittedOrderPaymentFormEvent>(_onSubmitted);
+    on<ResetOrderPaymentFormEvent>(_onReset);
   }
 
   final formKey = GlobalKey<FormState>();
@@ -42,6 +43,8 @@ class OrderPaymentFormBloc
 
     OrderPayment? orderPayment;
 
+    bool requiereReferencia = false;
+
     if (event.id.isNotEmpty) {
       final Resource responseOrderPayment = await orderPaymentUseCases
           .getOrderPaymentById
@@ -49,6 +52,8 @@ class OrderPaymentFormBloc
 
       if (responseOrderPayment is Success) {
         orderPayment = responseOrderPayment.data as OrderPayment;
+        requiereReferencia =
+            orderPayment.metodoPago?.requiereReferencia ?? false;
       }
     }
 
@@ -66,6 +71,7 @@ class OrderPaymentFormBloc
         responseOrden: results[0],
         responseMetodoPago: results[1],
         responseEntidadFinanciera: results[2],
+        requiereReferencia: requiereReferencia,
         formKey: formKey,
       ),
     );
@@ -122,6 +128,7 @@ class OrderPaymentFormBloc
         referencia: metodoSeleccionado?.requiereReferencia == true
             ? state.referencia
             : '',
+        requiereReferencia: metodoSeleccionado?.requiereReferencia,
         formKey: formKey,
       ),
     );
@@ -142,6 +149,10 @@ class OrderPaymentFormBloc
         state.responseMetodoPago is Success
         ? (state.responseMetodoPago as Success).data as List<PaymentMethod>
         : [];
+
+    final Order? orden = state.responseOrden is Success
+        ? (state.responseOrden as Success).data as Order
+        : null;
 
     final PaymentMethod? metodoSeleccionado = listaMetodoPago.firstWhereOrNull(
       (metodo) => metodo.id == state.idPaymentMethod,
@@ -173,6 +184,15 @@ class OrderPaymentFormBloc
       }
     }
 
+    final double totalPagado = orden?.totalPagado ?? 0;
+    final double totalOrden = orden?.total ?? 0;
+    if (state.monto + totalPagado > totalOrden) {
+      AppToast.warning(
+        'El valor del pago no puede ser mayor al total de la orden',
+      );
+      return;
+    }
+
     emit(state.copyWith(response: Loading(), formKey: formKey));
 
     final OrderPayment orderPayment = OrderPayment(
@@ -186,8 +206,6 @@ class OrderPaymentFormBloc
       observaciones: (state.observaciones ?? '').trim(),
     );
 
-    print('PAGO A GUARDAR ${orderPayment.toJson()}');
-
     final Resource response = state.id.isNotEmpty
         ? await orderPaymentUseCases.updateOrderPayment.run(
             orderPayment,
@@ -196,5 +214,12 @@ class OrderPaymentFormBloc
         : await orderPaymentUseCases.createOrderPayment.run(orderPayment);
 
     emit(state.copyWith(response: response, formKey: formKey));
+  }
+
+  Future<void> _onReset(
+    ResetOrderPaymentFormEvent event,
+    Emitter<OrderPaymentFormState> emit,
+  ) async {
+    emit(OrderPaymentFormState());
   }
 }

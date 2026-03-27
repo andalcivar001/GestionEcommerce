@@ -35,7 +35,7 @@ class OrderPaymentListContent extends StatelessWidget {
               ),
             ),
 
-            Expanded(child: _detallePagos()),
+            Expanded(child: _detallePagos(context)),
           ],
         ),
       ),
@@ -279,13 +279,16 @@ class OrderPaymentListContent extends StatelessWidget {
   }
 
   // 💳 LISTA DE PAGOS MÁS LIMPIA
-  Widget _detallePagos() {
+  Widget _detallePagos(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       itemCount: listaPagos.length,
       itemBuilder: (_, index) {
         final pago = listaPagos[index];
         IconData icon;
+        final String referencia = (pago.referencia ?? '').isNotEmpty
+            ? 'Ref: ${pago.referencia}'
+            : '';
         switch (pago.metodoPago!.tipoPago) {
           case 'E':
             icon = Icons.monetization_on_outlined;
@@ -298,61 +301,70 @@ class OrderPaymentListContent extends StatelessWidget {
             break;
         }
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 10,
-                color: Colors.black.withValues(alpha: 0.04),
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Color(0xffEEF2FF),
-                child: Icon(icon, color: Color(0xff4A6CF7)),
-              ),
-              const SizedBox(width: 12),
+        return GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              'order/payment/form',
+              arguments: {'idOrden': orden.id, 'id': pago.id},
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 10,
+                  color: Colors.black.withValues(alpha: 0.04),
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Color(0xffEEF2FF),
+                  child: Icon(icon, color: Color(0xff4A6CF7)),
+                ),
+                const SizedBox(width: 12),
 
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pago.entidadFinanciera?.nombre ?? 'Efectivo',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        referencia,
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      pago.entidadFinanciera?.nombre ?? 'Efectivo',
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      '\$${pago.monto.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
                     ),
                     Text(
-                      pago.referencia ?? '',
+                      DateFormat('dd MMM yyyy').format(orden.fecha),
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ],
                 ),
-              ),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$${pago.monto.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Text(
-                    DateFormat('dd MMM yyyy').format(orden.fecha),
-                    style: TextStyle(color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

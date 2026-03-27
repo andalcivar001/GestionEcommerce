@@ -3,6 +3,8 @@ import 'package:ecommerce_prueba/src/presentation/pages/order/payments/form/Orde
 import 'package:ecommerce_prueba/src/presentation/pages/order/payments/form/bloc/OrderPaymentFormBloc.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/payments/form/bloc/OrderPaymentFormEvent.dart';
 import 'package:ecommerce_prueba/src/presentation/pages/order/payments/form/bloc/OrderPaymentFormState.dart';
+import 'package:ecommerce_prueba/src/presentation/pages/order/payments/list/bloc/OrderPaymentListBloc.dart';
+import 'package:ecommerce_prueba/src/presentation/pages/order/payments/list/bloc/OrderPaymentListEvent.dart';
 import 'package:ecommerce_prueba/src/presentation/widgets/AppToast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +41,12 @@ class _OrderPaymentFormPageState extends State<OrderPaymentFormPage> {
   }
 
   @override
+  void dispose() {
+    bloc?.add(ResetOrderPaymentFormEvent());
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<OrderPaymentFormBloc>(context);
     return Scaffold(
@@ -58,6 +66,9 @@ class _OrderPaymentFormPageState extends State<OrderPaymentFormPage> {
             );
           } else if (response is Success) {
             AppToast.success('Pago guardado correctamente');
+            context.read<OrderPaymentListBloc>().add(
+              InitOrderPaymentListEvent(idOrden: idOrden ?? ''),
+            );
             Navigator.pop(context, true);
           }
 

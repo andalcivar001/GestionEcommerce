@@ -27,29 +27,16 @@ class OrderPaymentFormcontent extends StatelessWidget {
     final Order? orden = state.responseOrden is Success
         ? (state.responseOrden as Success).data as Order
         : null;
-    final List<PaymentMethod> listaMetodoPago =
-        state.responseMetodoPago is Success
-        ? (state.responseMetodoPago as Success).data as List<PaymentMethod>
-        : [];
-    final PaymentMethod? metodoSeleccionado = listaMetodoPago.firstWhereOrNull(
-      (metodo) => metodo.id == state.idPaymentMethod,
-    );
-    final bool requiereReferencia =
-        metodoSeleccionado?.requiereReferencia ?? false;
-    final bool requiereEntidadFinanciera =
-        (metodoSeleccionado?.tipoPago ?? '').isNotEmpty &&
-        metodoSeleccionado?.tipoPago != 'E';
+
     double saldo = orden != null ? orden.total - (orden.totalPagado ?? 0) : 0;
     String fecha = '';
     String nombreCliente = '';
     int secuencia = 0;
-    double total = 0;
 
     if (orden != null) {
       secuencia = orden.secuencia ?? 0;
       fecha = DateFormat('yyyy-MM-dd HH:mm').format(orden.fecha);
       nombreCliente = orden.cliente?.nombre ?? '';
-      total = orden.total;
     }
 
     return SafeArea(
@@ -72,8 +59,7 @@ class OrderPaymentFormcontent extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       _paymentFormCard(
-                        requiereReferencia: requiereReferencia,
-                        requiereEntidadFinanciera: requiereEntidadFinanciera,
+                        requiereReferencia: state.requiereReferencia,
                       ),
                     ],
                   ),
@@ -319,10 +305,7 @@ class OrderPaymentFormcontent extends StatelessWidget {
     );
   }
 
-  Widget _paymentFormCard({
-    required bool requiereReferencia,
-    required bool requiereEntidadFinanciera,
-  }) {
+  Widget _paymentFormCard({required bool requiereReferencia}) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(18),
@@ -378,17 +361,16 @@ class OrderPaymentFormcontent extends StatelessWidget {
             SizedBox(height: 8),
             _metodoPago(),
             SizedBox(height: 16),
-            if (requiereEntidadFinanciera) ...[
-              _sectionLabel('Entidad financiera'),
-              SizedBox(height: 8),
-              _entidadFinancieraSearch(),
-              SizedBox(height: 16),
-            ],
             _sectionLabel('Monto a registrar'),
             SizedBox(height: 8),
             _textMonto(),
             SizedBox(height: 16),
+
             if (requiereReferencia) ...[
+              _sectionLabel('Entidad financiera'),
+              SizedBox(height: 8),
+              _entidadFinancieraSearch(),
+              SizedBox(height: 16),
               _sectionLabel('Referencia'),
               SizedBox(height: 8),
               _textReferencia(),
@@ -459,6 +441,7 @@ class OrderPaymentFormcontent extends StatelessWidget {
       key: ValueKey('referencia-${state.id}'),
       label: 'Referencia',
       icon: Icons.receipt_long_outlined,
+      textInputType: TextInputType.number,
       textInputAction: TextInputAction.next,
       initialValue: state.referencia ?? '',
       hinText: 'Ingresa el numero o codigo de referencia',

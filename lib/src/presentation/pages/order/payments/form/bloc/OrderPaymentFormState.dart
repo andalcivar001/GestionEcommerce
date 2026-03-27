@@ -18,6 +18,7 @@ class OrderPaymentFormState extends Equatable {
   final GlobalKey<FormState>? formKey;
   final bool loading;
   final String? tipoMetodoPago;
+  final bool requiereReferencia;
 
   OrderPaymentFormState({
     this.id = '',
@@ -34,6 +35,7 @@ class OrderPaymentFormState extends Equatable {
     this.responseOrden,
     this.loading = false,
     this.tipoMetodoPago,
+    this.requiereReferencia = false,
   });
 
   OrderPaymentFormState copyWith({
@@ -51,6 +53,7 @@ class OrderPaymentFormState extends Equatable {
     GlobalKey<FormState>? formKey,
     bool? loading,
     String? tipoMetodoPago,
+    bool? requiereReferencia,
   }) {
     return OrderPaymentFormState(
       id: id ?? this.id,
@@ -67,6 +70,7 @@ class OrderPaymentFormState extends Equatable {
       responseOrden: responseOrden ?? this.responseOrden,
       loading: loading ?? this.loading,
       tipoMetodoPago: tipoMetodoPago ?? this.tipoMetodoPago,
+      requiereReferencia: requiereReferencia ?? this.requiereReferencia,
       formKey: formKey,
     );
   }
@@ -85,5 +89,6 @@ class OrderPaymentFormState extends Equatable {
     responseOrden,
     response,
     tipoMetodoPago,
+    requiereReferencia,
   ];
 }

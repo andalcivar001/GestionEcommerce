@@ -54,3 +54,7 @@ class ObservacionesOrderPaymentFormEvent extends OrderPaymentFormEvent {
 class SubmittedOrderPaymentFormEvent extends OrderPaymentFormEvent {
   const SubmittedOrderPaymentFormEvent();
 }
+
+class ResetOrderPaymentFormEvent extends OrderPaymentFormEvent {
+  const ResetOrderPaymentFormEvent();
+}
