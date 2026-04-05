@@ -22,38 +22,37 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     _bloc = BlocProvider.of<LoginBloc>(context);
     return Scaffold(
-      body: Center(
-        child: BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
+      body: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          final responseState = state.response;
+          if (responseState is Error) {
+            AppToast.error(responseState.message);
+          } else if (responseState is Success) {
+            final authResponse = responseState.data as AuthResponse;
+            _bloc?.add(SaveUserSessionLoginEvent(authResponse: authResponse));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushNamedAndRemoveUntil(context, 'home', (_) => false);
+            });
+          }
+        },
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
             final responseState = state.response;
-            if (responseState is Error) {
-              AppToast.error(responseState.message);
-            } else if (responseState is Success) {
-              final authResponse = responseState.data as AuthResponse;
-              _bloc?.add(SaveUserSessionLoginEvent(authResponse: authResponse));
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  'home',
-                  (_) => false,
-                );
-              });
+            if (responseState is Loading) {
+              return Stack(
+                children: [
+                  LoginContent(_bloc, state),
+                  Container(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                  ),
+                ],
+              );
             }
+            return LoginContent(_bloc, state);
           },
-          child: BlocBuilder<LoginBloc, LoginState>(
-            builder: (context, state) {
-              final responseState = state.response;
-              if (responseState is Loading) {
-                return Stack(
-                  children: [
-                    LoginContent(_bloc, state),
-                    Center(child: CircularProgressIndicator()),
-                  ],
-                );
-              }
-              return LoginContent(_bloc, state);
-            },
-          ),
         ),
       ),
     );
