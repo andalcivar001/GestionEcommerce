@@ -47,56 +47,70 @@ class LoginContent extends StatelessWidget {
                 padding: const EdgeInsets.all(22),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 460),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32),
-                      color: Colors.white,
-                      border: Border.all(color: const Color(0xffDCE6F8)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xff24408E).withValues(alpha: 0.14),
-                          blurRadius: 32,
-                          spreadRadius: -12,
-                          offset: const Offset(0, 22),
-                        ),
-                      ],
-                    ),
-                    child: Form(
-                      key: _state.formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _TopBanner(),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 26),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                _FieldLabel(
-                                  title: 'Correo electronico',
-                                  subtitle:
-                                      'Ingresa el correo asociado a tu cuenta.',
-                                ),
-                                const SizedBox(height: 10),
-                                _textEmail(),
-                                const SizedBox(height: 18),
-                                _FieldLabel(
-                                  title: 'Contrasena',
-                                  subtitle:
-                                      'Escribe tu clave para entrar al panel.',
-                                ),
-                                const SizedBox(height: 10),
-                                _textPassword(),
-                                const SizedBox(height: 24),
-                                _buttonEntrar(),
-                                const SizedBox(height: 16),
-                                _buildFooter(context),
-                              ],
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(32),
+                          color: Colors.white,
+                          border: Border.all(color: const Color(0xffDCE6F8)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(
+                                0xff24408E,
+                              ).withValues(alpha: 0.14),
+                              blurRadius: 32,
+                              spreadRadius: -12,
+                              offset: const Offset(0, 22),
                             ),
+                          ],
+                        ),
+                        child: Form(
+                          key: _state.formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _TopBanner(),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  24,
+                                  24,
+                                  24,
+                                  26,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    _FieldLabel(
+                                      title: 'Correo electronico',
+                                      subtitle:
+                                          'Ingresa el correo asociado a tu cuenta.',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    _textEmail(),
+                                    const SizedBox(height: 18),
+                                    _FieldLabel(
+                                      title: 'Contrasena',
+                                      subtitle:
+                                          'Escribe tu clave para entrar al panel.',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    _textPassword(),
+                                    const SizedBox(height: 24),
+                                    _buttonEntrar(),
+                                    const SizedBox(height: 16),
+                                    _buildFooter(context),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 18),
+                      const _CopyrightSignature(),
+                    ],
                   ),
                 ),
               ),
@@ -138,10 +152,7 @@ class LoginContent extends StatelessWidget {
               children: [
                 Text(
                   'Aun no tienes cuenta?',
-                  style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 13.5,
-                  ),
+                  style: TextStyle(color: Colors.grey.shade700, fontSize: 13.5),
                 ),
                 InkWell(
                   onTap: () {
@@ -217,6 +228,42 @@ class LoginContent extends StatelessWidget {
   }
 }
 
+class _CopyrightSignature extends StatelessWidget {
+  const _CopyrightSignature();
+
+  @override
+  Widget build(BuildContext context) {
+    int year = DateTime.now().year;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          Text(
+            'Desarrollado por Andres Alcivar',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: const Color(0xff64748B),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+            ),
+          ),
+          Text(
+            '@ ${year.toString()} Todos los derechos reservados',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: const Color(0xff64748B),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TopBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -269,10 +316,7 @@ class _TopBanner extends StatelessWidget {
             runSpacing: 8,
             children: const [
               _BannerChip(icon: Icons.flash_on_rounded, text: 'Acceso rapido'),
-              _BannerChip(
-                icon: Icons.security_rounded,
-                text: 'Ingreso seguro',
-              ),
+              _BannerChip(icon: Icons.security_rounded, text: 'Ingreso seguro'),
             ],
           ),
         ],
